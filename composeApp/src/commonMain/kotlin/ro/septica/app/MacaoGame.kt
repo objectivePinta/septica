@@ -78,7 +78,7 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
     }
 
     fun playSelected(suit: Suit? = null) {
-        val card = requireNotNull(selectedCard)
+        val card = selectedCard ?: return
         state = engine.playCard(state, Player.HUMAN, card.id, suit)
         selectedId = null
         chooseSuit = false
@@ -190,7 +190,7 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
             } else {
                 Button(
                     onClick = {
-                        if (requireNotNull(selectedCard).requiresSuitChoice) chooseSuit = true
+                        if (selectedCard?.requiresSuitChoice == true) chooseSuit = true
                         else playSelected()
                     },
                     enabled = humanTurn && selectedCard != null,

@@ -222,7 +222,7 @@ internal fun TabinetGame(onMenu: () -> Unit, paused: Boolean) {
                 ) {
                     OutlinedButton(
                         onClick = {
-                            val card = requireNotNull(selectedCard)
+                            val card = selectedCard ?: return@OutlinedButton
                             selectedTableIds = engine.suggestCapture(state, Player.HUMAN, card.id).toSet()
                             hintMessage = if (selectedTableIds.isEmpty()) {
                                 "Nu există o captură cu această carte."
@@ -239,7 +239,7 @@ internal fun TabinetGame(onMenu: () -> Unit, paused: Boolean) {
                 }
                 Button(
                     onClick = {
-                        val card = requireNotNull(selectedCard)
+                        val card = selectedCard ?: return@Button
                         state = engine.playCard(state, Player.HUMAN, card.id, selectedTableIds.toList())
                         clearSelection()
                     },

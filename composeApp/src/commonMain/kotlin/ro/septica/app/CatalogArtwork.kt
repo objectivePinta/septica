@@ -22,28 +22,10 @@ private data class PreviewCard(val rank: String, val suit: String, val red: Bool
 
 internal fun GameDestination.artColor(): Color = when (this) {
     GameDestination.SEPTICA -> Color(0xFF22665B)
-    GameDestination.MACAO -> Color(0xFF653C6D)
-    GameDestination.TABINET -> Color(0xFF3B586D)
-    GameDestination.WAR -> Color(0xFF703B43)
-    GameDestination.OLD_MAID -> Color(0xFF64502F)
-    GameDestination.BLACKJACK -> Color(0xFF2F574B)
-    GameDestination.WHIST -> Color(0xFF3E4973)
-    GameDestination.RENTZ -> Color(0xFF664D70)
-    GameDestination.SOLITAIRE -> Color(0xFF32626B)
-    GameDestination.SIXTY_SIX -> Color(0xFF745336)
 }
 
 private fun GameDestination.previewCards(): List<PreviewCard> = when (this) {
     GameDestination.SEPTICA -> listOf(PreviewCard("A", "♠", false), PreviewCard("7", "♥", true), PreviewCard("10", "♦", true))
-    GameDestination.MACAO -> listOf(PreviewCard("2", "♣", false), PreviewCard("A", "♦", true), PreviewCard("+5", "★", false))
-    GameDestination.TABINET -> listOf(PreviewCard("3", "♦", true), PreviewCard("9", "♠", false), PreviewCard("6", "♥", true))
-    GameDestination.WAR -> listOf(PreviewCard("K", "♥", true), PreviewCard("A", "♠", false), PreviewCard("K", "♦", true))
-    GameDestination.OLD_MAID -> listOf(PreviewCard("Q", "♥", true), PreviewCard("K", "♠", false), PreviewCard("Q", "♦", true))
-    GameDestination.BLACKJACK -> listOf(PreviewCard("A", "♠", false), PreviewCard("K", "♥", true))
-    GameDestination.WHIST -> listOf(PreviewCard("Q", "♠", false), PreviewCard("A", "♠", false), PreviewCard("K", "♠", false))
-    GameDestination.RENTZ -> listOf(PreviewCard("10", "♦", true), PreviewCard("J", "♦", true), PreviewCard("Q", "♦", true))
-    GameDestination.SOLITAIRE -> listOf(PreviewCard("A", "♥", true), PreviewCard("2", "♥", true), PreviewCard("3", "♥", true))
-    GameDestination.SIXTY_SIX -> listOf(PreviewCard("A", "♣", false), PreviewCard("Q", "♥", true), PreviewCard("K", "♥", true))
 }
 
 @Composable

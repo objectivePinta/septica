@@ -44,7 +44,7 @@ internal fun SepticaGame(onMenu: () -> Unit, paused: Boolean) {
 
                 state.phase == GamePhase.PLAYING && state.turn != Player.HUMAN -> {
                     delay(if (state.table.isEmpty()) 700 else 850)
-                    val player = requireNotNull(state.turn)
+                    val player = state.turn ?: return@LaunchedEffect
                     val card = engine.chooseComputerCard(state)
                     state = if (card == null) {
                         engine.pass(state, player)

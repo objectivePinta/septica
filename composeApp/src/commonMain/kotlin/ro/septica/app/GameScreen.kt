@@ -191,7 +191,7 @@ private fun HeaderButton(
 ) {
     Box(
         modifier = Modifier
-            .size(42.dp)
+            .size(44.dp)
             .clip(CircleShape)
             .background(SepticaColors.Panel.copy(alpha = 0.92f))
             .border(1.dp, SepticaColors.Gold.copy(alpha = 0.5f), CircleShape)
@@ -580,7 +580,7 @@ private fun ActionArea(
                 onClick = onNewGame,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = goldButtonColors(),
             ) {
@@ -597,7 +597,7 @@ private fun ActionArea(
                     onClick = onPass,
                     modifier = Modifier
                         .weight(1f)
-                        .height(52.dp),
+                        .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.7f)),
                 ) {
@@ -612,7 +612,7 @@ private fun ActionArea(
                     enabled = selectedCardId != null,
                     modifier = Modifier
                         .weight(1f)
-                        .height(52.dp),
+                        .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = goldButtonColors(),
                 ) {
@@ -627,7 +627,7 @@ private fun ActionArea(
                 enabled = selectedCardId != null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = goldButtonColors(),
             ) {

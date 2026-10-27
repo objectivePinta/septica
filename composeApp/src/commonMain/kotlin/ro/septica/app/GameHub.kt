@@ -3,27 +3,21 @@ package ro.septica.app
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -35,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -59,15 +54,6 @@ private fun GameNavigation() {
     when (destination) {
         null -> GamePicker(onSelect = { destination = it })
         GameDestination.SEPTICA -> SepticaGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.MACAO -> MacaoGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.TABINET -> TabinetGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.WAR -> WarGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.OLD_MAID -> OldMaidGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.BLACKJACK -> BlackjackGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.WHIST -> WhistGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.RENTZ -> RentzGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.SOLITAIRE -> SolitaireGame(onMenu = { confirmExit = true }, paused = confirmExit)
-        GameDestination.SIXTY_SIX -> SixtySixGame(onMenu = { confirmExit = true }, paused = confirmExit)
     }
 
     if (confirmExit) {
@@ -90,97 +76,64 @@ private fun GameNavigation() {
 
 @Composable
 private fun GamePicker(onSelect: (GameDestination) -> Unit) {
-    var query by remember { mutableStateOf("") }
-    val games = matchingGames(query)
     TableBackdrop(
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
         contentAlignment = Alignment.Center,
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(280.dp),
-            modifier = Modifier.widthIn(max = 1_000.dp).fillMaxSize(),
-            contentPadding = PaddingValues(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 520.dp)
+                .padding(20.dp),
+            shape = RoundedCornerShape(32.dp),
+            color = SepticaColors.Panel.copy(alpha = 0.94f),
+            border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.28f)),
+            shadowElevation = 18.dp,
         ) {
-            item(key = "heading", span = { GridItemSpan(maxLineSpan) }) {
-                Surface(
-                    shape = RoundedCornerShape(28.dp),
-                    color = SepticaColors.Panel.copy(alpha = 0.80f),
-                    border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.30f)),
-                ) {
-                    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Text(
-                            "BUN VENIT ÎN CLUB",
-                            color = SepticaColors.Gold,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 10.sp,
-                            letterSpacing = 2.sp,
-                        )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text("La masa\nde joc.", style = MaterialTheme.typography.displaySmall)
-                                Text("Cărți clasice.\nO experiență nouă.", color = SepticaColors.Muted)
-                            }
-                            CatalogArtwork(
-                                GameDestination.SEPTICA,
-                                modifier = Modifier.width(122.dp).height(130.dp),
-                                paintedBackground = false,
-                            )
-                        }
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            CatalogBadge("10 JOCURI")
-                            CatalogBadge("OFFLINE")
-                            CatalogBadge("ASISTENT LOCAL")
-                        }
-                    }
-                }
-            }
-            item(key = "search", span = { GridItemSpan(maxLineSpan) }) {
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    label = { Text("Caută un joc") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                    trailingIcon = if (query.isNotEmpty()) {
-                        { TextButton(onClick = { query = "" }) { Text("Șterge") } }
-                    } else null,
+            Column(
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 28.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Text(
+                    "BUN VENIT LA MASĂ",
+                    color = SepticaColors.Gold,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 11.sp,
+                    letterSpacing = 2.2.sp,
                 )
-            }
-            items(games, key = { it.name }) { game ->
-                GameOption(game = game, onClick = { onSelect(game) })
-            }
-            if (games.isEmpty()) {
-                item(key = "empty", span = { GridItemSpan(maxLineSpan) }) {
-                    Text("Niciun joc găsit. Încearcă alt nume.", color = SepticaColors.Muted)
+                CatalogArtwork(
+                    GameDestination.SEPTICA,
+                    modifier = Modifier.width(188.dp).height(176.dp),
+                    paintedBackground = true,
+                )
+                Text(
+                    "ȘEPTICĂ",
+                    style = MaterialTheme.typography.displaySmall,
+                    color = SepticaColors.Cream,
+                )
+                Text(
+                    "Taie cu un 7. Adună așii și decarii.\nJoacă o partidă relaxată, offline.",
+                    color = SepticaColors.Muted,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 21.sp,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    CatalogBadge("2–4 JUCĂTORI")
+                    CatalogBadge("OFFLINE")
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun GameOption(game: GameDestination, onClick: () -> Unit) {
-    Surface(
-        shape = RoundedCornerShape(26.dp),
-        color = SepticaColors.Panel,
-        border = BorderStroke(1.dp, game.artColor().copy(alpha = 0.70f)),
-        shadowElevation = 8.dp,
-    ) {
-        Column(Modifier.fillMaxWidth()) {
-            CatalogArtwork(game, modifier = Modifier.fillMaxWidth().height(152.dp))
-            Column(Modifier.padding(20.dp)) {
-                Text(game.title, style = MaterialTheme.typography.headlineSmall, color = SepticaColors.PaleGold)
-                Spacer(Modifier.height(10.dp))
-                Text(game.description, style = MaterialTheme.typography.bodyMedium)
-                Spacer(Modifier.height(8.dp))
-                Text(game.players, style = MaterialTheme.typography.bodySmall, color = SepticaColors.Muted)
-                Spacer(Modifier.height(16.dp))
-                Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-                    Text("INTRĂ LA MASĂ  →")
+                Button(
+                    onClick = { onSelect(GameDestination.SEPTICA) },
+                    modifier = Modifier.fillMaxWidth().height(54.dp),
+                    shape = RoundedCornerShape(18.dp),
+                ) {
+                    Text("JOACĂ ȘEPTICĂ", fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
                 }
+                Text(
+                    "Fără cont. Fără reclame.",
+                    color = SepticaColors.Muted.copy(alpha = 0.78f),
+                    fontSize = 12.sp,
+                )
             }
         }
     }

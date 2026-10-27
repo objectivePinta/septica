@@ -66,7 +66,7 @@ internal fun CardFace(
                 scaleY = scaleX
                 alpha = if (muted) .56f else 1f
             }
-            .shadow(if (selected) 8.dp else 3.dp, shape)
+            .shadow(if (selected) 10.dp else 4.dp, shape)
             .clip(shape)
             .drawWithCache {
                 val paper = Brush.linearGradient(

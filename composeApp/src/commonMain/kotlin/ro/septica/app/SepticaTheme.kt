@@ -11,17 +11,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 internal object SepticaColors {
-    val DeepGreen = Color(0xFF080F19)
-    val TableGreen = Color(0xFF123732)
-    val Felt = Color(0xFF215B50)
-    val Panel = Color(0xFF142B30)
-    val Gold = Color(0xFFE8BD76)
-    val PaleGold = Color(0xFFFFDFA5)
+    val DeepGreen = Color(0xFF07131A)
+    val TableGreen = Color(0xFF123D38)
+    val Felt = Color(0xFF287064)
+    val Panel = Color(0xFF19343A)
+    val Gold = Color(0xFFEBC27D)
+    val PaleGold = Color(0xFFFFE2AE)
     val Cream = Color(0xFFFFF9EE)
     val Ink = Color(0xFF172537)
     val Burgundy = Color(0xFFAE344A)
     val SoftWhite = Color(0xFFF0F3F4)
-    val Muted = Color(0xFFA7BDC2)
+    val Muted = Color(0xFFB1C8CC)
 }
 
 private val SepticaColorScheme = darkColorScheme(
@@ -42,11 +42,11 @@ private val SepticaColorScheme = darkColorScheme(
 )
 
 private val SepticaTypography = Typography(
-    displaySmall = TextStyle(
+        displaySmall = TextStyle(
         fontFamily = FontFamily.Serif,
         fontWeight = FontWeight.Black,
-        fontSize = 30.sp,
-        lineHeight = 34.sp,
+            fontSize = 32.sp,
+            lineHeight = 36.sp,
         letterSpacing = 0.5.sp,
     ),
     headlineSmall = TextStyle(
