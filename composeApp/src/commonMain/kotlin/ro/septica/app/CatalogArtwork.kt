@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 
 private data class PreviewCard(val rank: String, val suit: String, val red: Boolean)
 
-internal fun GameDestination.artColor(): Color = when (this) {
-    GameDestination.SEPTICA -> Color(0xFF22665B)
+internal fun GameDestination.artColor(tokens: GameThemeTokens): Color = when (this) {
+    GameDestination.SEPTICA -> tokens.felt
 }
 
 private fun GameDestination.previewCards(): List<PreviewCard> = when (this) {
@@ -34,11 +34,12 @@ internal fun CatalogArtwork(
     modifier: Modifier = Modifier,
     paintedBackground: Boolean = true,
 ) {
+    val tokens = LocalGameThemeTokens.current
     val cards = game.previewCards()
     BoxWithConstraints(
         modifier = modifier.clearAndSetSemantics {}.then(
             if (paintedBackground) Modifier.background(
-                Brush.linearGradient(listOf(game.artColor(), SepticaColors.DeepGreen)),
+                Brush.linearGradient(listOf(game.artColor(tokens), tokens.background)),
             ) else Modifier,
         ),
         contentAlignment = Alignment.Center,
@@ -47,14 +48,14 @@ internal fun CatalogArtwork(
             Canvas(Modifier.matchParentSize()) {
                 val center = Offset(size.width / 2, size.height * 0.62f)
                 drawCircle(
-                    game.artColor().copy(alpha = 0.65f),
+                    game.artColor(tokens).copy(alpha = 0.65f),
                     radius = size.height * 0.50f,
                     center = center,
                 )
                 for (index in 0..2) {
                     val inset = 12.dp.toPx() + index * 5.dp.toPx()
                     drawOval(
-                        SepticaColors.Gold.copy(alpha = if (index == 0) 0.28f else 0.09f),
+                        tokens.primary.copy(alpha = if (index == 0) 0.28f else 0.09f),
                         topLeft = Offset(inset, inset),
                         size = Size((size.width - inset * 2).coerceAtLeast(0f), (size.height - inset * 2).coerceAtLeast(0f)),
                         style = Stroke(0.8.dp.toPx()),
@@ -62,7 +63,7 @@ internal fun CatalogArtwork(
                 }
                 repeat(7) { index ->
                     val x = size.width * (index + 1) / 8
-                    drawCircle(SepticaColors.Cream.copy(alpha = 0.12f), 1.2.dp.toPx(), Offset(x, 16.dp.toPx()))
+                    drawCircle(tokens.onSurface.copy(alpha = 0.12f), 1.2.dp.toPx(), Offset(x, 16.dp.toPx()))
                 }
             }
         }

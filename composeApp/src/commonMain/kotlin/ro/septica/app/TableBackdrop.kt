@@ -21,26 +21,27 @@ internal fun TableBackdrop(
     contentAlignment: Alignment = Alignment.TopCenter,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Box(
-        modifier = modifier.fillMaxSize().background(SepticaColors.DeepGreen),
+        modifier = modifier.fillMaxSize().background(tokens.background),
         contentAlignment = contentAlignment,
     ) {
         Canvas(Modifier.matchParentSize()) {
             drawRect(
                 Brush.radialGradient(
-                    listOf(SepticaColors.Felt.copy(alpha = 0.78f), Color.Transparent),
+                    listOf(tokens.felt.copy(alpha = 0.78f), Color.Transparent),
                     center = Offset(size.width * 0.35f, size.height * 0.12f),
                     radius = maxOf(size.width, size.height) * 0.95f,
                 ),
             )
             drawOval(
-                color = SepticaColors.Gold.copy(alpha = 0.10f),
+                color = tokens.primary.copy(alpha = 0.10f),
                 topLeft = Offset(-size.width * 0.4f, size.height * 0.16f),
                 size = Size(size.width * 1.8f, size.height * 0.80f),
                 style = Stroke(1.dp.toPx()),
             )
             drawOval(
-                color = SepticaColors.Gold.copy(alpha = 0.045f),
+                color = tokens.primary.copy(alpha = 0.045f),
                 topLeft = Offset(-size.width * 0.43f, size.height * 0.145f),
                 size = Size(size.width * 1.86f, size.height * 0.83f),
                 style = Stroke(1.dp.toPx()),
@@ -51,7 +52,7 @@ internal fun TableBackdrop(
             for (column in 0..columns) {
                 for (row in 0..rows) {
                     drawCircle(
-                        SepticaColors.Cream.copy(alpha = 0.035f),
+                        tokens.onBackground.copy(alpha = 0.035f),
                         radius = 0.65.dp.toPx(),
                         center = Offset(column * step + if (row % 2 == 0) 0f else step / 2, row * step),
                     )

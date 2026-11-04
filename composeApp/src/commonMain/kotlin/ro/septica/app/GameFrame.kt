@@ -45,6 +45,7 @@ internal fun GameFrame(
     onPauseChange: (Boolean) -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val tokens = LocalGameThemeTokens.current
     var showRules by remember { mutableStateOf(false) }
     var showRestart by remember { mutableStateOf(false) }
 
@@ -68,9 +69,9 @@ internal fun GameFrame(
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 2.sp,
-                color = SepticaColors.Gold,
+                color = tokens.primary,
             )
-            Text(title, style = MaterialTheme.typography.displaySmall, color = SepticaColors.Cream)
+            Text(title, style = MaterialTheme.typography.displaySmall, color = tokens.onSurface)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 TextButton(onClick = onMenu) { Text("‹ Jocuri") }
                 TextButton(onClick = { showRules = true; onPauseChange(true) }) { Text("Reguli") }
@@ -79,8 +80,8 @@ internal fun GameFrame(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(28.dp),
-                color = SepticaColors.Panel.copy(alpha = 0.88f),
-                border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.18f)),
+                color = tokens.surface.copy(alpha = 0.88f),
+                border = BorderStroke(1.dp, tokens.primary.copy(alpha = 0.18f)),
                 shadowElevation = 8.dp,
             ) {
                 Column(
@@ -92,7 +93,7 @@ internal fun GameFrame(
             Text(
                 "Joacă în ritmul tău. Fără bani reali.",
                 style = MaterialTheme.typography.bodySmall,
-                color = SepticaColors.Muted,
+                color = tokens.onSurfaceVariant,
             )
         }
     }

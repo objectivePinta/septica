@@ -31,6 +31,7 @@ import ro.septica.solitaire.SolitaireTarget
 
 @Composable
 internal fun SolitaireGame(onMenu: () -> Unit, paused: Boolean) {
+    val tokens = LocalGameThemeTokens.current
     var state by remember { mutableStateOf(SolitaireEngine.newGame(Random.nextInt())) }
     var selection by remember { mutableStateOf<SolitaireSource?>(null) }
     var dialogPaused by remember { mutableStateOf(false) }
@@ -92,13 +93,13 @@ internal fun SolitaireGame(onMenu: () -> Unit, paused: Boolean) {
     ) {
         Text(
             if (board.won) "Felicitări! Ai câștigat! Poți anula ultima mutare sau începe un joc nou." else message,
-            color = SepticaColors.Cream,
+            color = tokens.onSurface,
         )
         CoachPanel(board, !blocked && !board.won,
             analyze = { ro.septica.coach.solitaireAdvice(ro.septica.coach.SolitaireView.from(board)) })
         Text(
             "Pachet: ${board.stock.size} · Trase: ${board.waste.size} · Fundații: ${board.foundations.sumOf { it.size }}/52",
-            color = SepticaColors.Cream,
+            color = tokens.onSurface,
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
@@ -110,12 +111,12 @@ internal fun SolitaireGame(onMenu: () -> Unit, paused: Boolean) {
             enabled = !blocked && state.history.isNotEmpty(),
             onClick = { act { SolitaireEngine.undo(state) } },
         ) { Text("Anulează mutarea") }
-        Text("Ultima carte trasă", color = SepticaColors.Cream)
+        Text("Ultima carte trasă", color = tokens.onSurface)
         board.waste.lastOrNull()?.let { card ->
             StandardCardView(card, selected = selection == SolitaireSource.Waste,
                 onClick = if (blocked || board.won) null else { { select(SolitaireSource.Waste) } })
-        } ?: Text("Nicio carte trasă", color = SepticaColors.Cream)
-        Text("Fundații · atinge antetul pentru a depune", color = SepticaColors.Cream)
+        } ?: Text("Nicio carte trasă", color = tokens.onSurface)
+        Text("Fundații · atinge antetul pentru a depune", color = tokens.onSurface)
         LazyRow(Modifier.fillMaxWidth().height(170.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(4) { index ->
                 val suit = Suit.entries[index]
@@ -137,7 +138,7 @@ internal fun SolitaireGame(onMenu: () -> Unit, paused: Boolean) {
                 }
             }
         }
-        Text("Coloane · derulează lateral ↔ · atinge antetul pentru a muta", color = SepticaColors.Cream)
+        Text("Coloane · derulează lateral ↔ · atinge antetul pentru a muta", color = tokens.onSurface)
         val tallest = board.tableau.maxOf { pile ->
             64 + pile.count { !it.faceUp } * 20 + pile.count { it.faceUp } * 52
         }.coerceAtLeast(128)
@@ -171,7 +172,7 @@ internal fun SolitaireGame(onMenu: () -> Unit, paused: Boolean) {
                                     contentDescription = "${entry.card.accessibilityLabel}, coloana ${column + 1}" +
                                         if (selected) ", selectată" else ""
                                 },
-                                color = if (selected) SepticaColors.PaleGold else SepticaColors.Cream,
+                                color = if (selected) tokens.secondary else tokens.onSurface,
                                 border = if (selected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
                             ) {
                                 Text(

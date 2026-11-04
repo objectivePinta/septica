@@ -35,7 +35,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SepticaApp() {
-    SepticaTheme {
+    val themeLoad = remember { loadGameTheme(createThemePreferenceStore()) }
+    SepticaTheme(themeLoad.theme) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
@@ -76,6 +77,7 @@ private fun GameNavigation() {
 
 @Composable
 private fun GamePicker(onSelect: (GameDestination) -> Unit) {
+    val tokens = LocalGameThemeTokens.current
     TableBackdrop(
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
         contentAlignment = Alignment.Center,
@@ -86,8 +88,8 @@ private fun GamePicker(onSelect: (GameDestination) -> Unit) {
                 .widthIn(max = 520.dp)
                 .padding(20.dp),
             shape = RoundedCornerShape(32.dp),
-            color = SepticaColors.Panel.copy(alpha = 0.94f),
-            border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.28f)),
+            color = tokens.surface.copy(alpha = 0.94f),
+            border = BorderStroke(1.dp, tokens.primary.copy(alpha = 0.28f)),
             shadowElevation = 18.dp,
         ) {
             Column(
@@ -97,7 +99,7 @@ private fun GamePicker(onSelect: (GameDestination) -> Unit) {
             ) {
                 Text(
                     "BUN VENIT LA MASĂ",
-                    color = SepticaColors.Gold,
+                    color = tokens.primary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 11.sp,
                     letterSpacing = 2.2.sp,
@@ -110,11 +112,11 @@ private fun GamePicker(onSelect: (GameDestination) -> Unit) {
                 Text(
                     "ȘEPTICĂ",
                     style = MaterialTheme.typography.displaySmall,
-                    color = SepticaColors.Cream,
+                    color = tokens.onSurface,
                 )
                 Text(
                     "Taie cu un 7. Adună așii și decarii.\nJoacă o partidă relaxată, offline.",
-                    color = SepticaColors.Muted,
+                    color = tokens.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     lineHeight = 21.sp,
                 )
@@ -131,7 +133,7 @@ private fun GamePicker(onSelect: (GameDestination) -> Unit) {
                 }
                 Text(
                     "Fără cont. Fără reclame.",
-                    color = SepticaColors.Muted.copy(alpha = 0.78f),
+                    color = tokens.onSurfaceVariant.copy(alpha = 0.78f),
                     fontSize = 12.sp,
                 )
             }
@@ -141,15 +143,16 @@ private fun GamePicker(onSelect: (GameDestination) -> Unit) {
 
 @Composable
 private fun CatalogBadge(text: String) {
+    val tokens = LocalGameThemeTokens.current
     Surface(
         shape = RoundedCornerShape(50),
-        color = SepticaColors.DeepGreen.copy(alpha = 0.45f),
-        border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.18f)),
+        color = tokens.background.copy(alpha = 0.45f),
+        border = BorderStroke(1.dp, tokens.primary.copy(alpha = 0.18f)),
     ) {
         Text(
             text,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-            color = SepticaColors.PaleGold,
+            color = tokens.secondary,
             fontSize = 8.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 0.4.sp,

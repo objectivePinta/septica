@@ -44,6 +44,7 @@ private fun seatName(seat: Int): String = if (seat == 0) "Tu" else "Robot $seat"
 
 @Composable
 internal fun TrickGameUi(mode: TrickMode, onMenu: () -> Unit, paused: Boolean) {
+    val tokens = LocalGameThemeTokens.current
     var gameId by remember(mode) { mutableStateOf(0) }
     var state by remember(mode) { mutableStateOf(newTrickGame(mode)) }
     var modalPaused by remember { mutableStateOf(false) }
@@ -70,18 +71,18 @@ internal fun TrickGameUi(mode: TrickMode, onMenu: () -> Unit, paused: Boolean) {
             onSelectCard = { selectedId = it })
         Text(
             "Runda ${state.round + 1}/${state.roundCount} · Donator: ${seatName(state.dealer)}",
-            color = SepticaColors.Cream,
+            color = tokens.onSurface,
         )
         state.contract?.let {
-            Text("${it.title}: ${it.rules}", color = SepticaColors.Cream)
+            Text("${it.title}: ${it.rules}", color = tokens.onSurface)
         }
         Text(
             "${state.handSize} cărți · Atu: ${state.trump?.romanianName ?: "fără atu"}" +
                 " · Culoare cerută: ${state.table.firstOrNull()?.card?.suit?.romanianName ?: "—"}",
-            color = SepticaColors.Cream,
+            color = tokens.onSurface,
         )
         state.trumpCard?.let {
-            Text("Atu întors (în afara mâinilor)", color = SepticaColors.Cream)
+            Text("Atu întors (în afara mâinilor)", color = tokens.onSurface)
             StandardCardView(it)
         }
         (0..3).forEach { seat ->
@@ -91,7 +92,7 @@ internal fun TrickGameUi(mode: TrickMode, onMenu: () -> Unit, paused: Boolean) {
                 "${seatName(seat)} · Cărți: ${state.hands[seat].size}$bidLabel" +
                     " · Levate: ${state.tricks[seat]} · Scor: ${state.scores[seat]}" +
                     " · Runda: ${state.roundScores[seat]}$place",
-                color = SepticaColors.Cream,
+                color = tokens.onSurface,
             )
         }
         if (state.contract == Contract.RENTZ) {
@@ -99,27 +100,27 @@ internal fun TrickGameUi(mode: TrickMode, onMenu: () -> Unit, paused: Boolean) {
                 val cards = state.lanes.filter { it.suit == suit }.sortedBy { it.rank.value }
                 Text("${suit.symbol} ${suit.romanianName}: " +
                     if (cards.isEmpty()) "așteaptă J" else cards.joinToString(" · ") { it.rank.symbol },
-                    color = SepticaColors.Cream)
+                    color = tokens.onSurface)
             }
-            state.lastPass?.let { Text("${seatName(it)} a spus pas.", color = SepticaColors.Cream) }
+            state.lastPass?.let { Text("${seatName(it)} a spus pas.", color = tokens.onSurface) }
         } else {
             if (state.table.isNotEmpty()) {
-                Text("Levada curentă", color = SepticaColors.Cream)
+                Text("Levada curentă", color = tokens.onSurface)
                 TrickCards(state.table)
             }
             if (state.lastTrick.isNotEmpty()) {
-                Text("Ultima levată · Câștigător: ${seatName(state.lastWinner!!)}", color = SepticaColors.Cream)
+                Text("Ultima levată · Câștigător: ${seatName(state.lastWinner!!)}", color = tokens.onSurface)
                 TrickCards(state.lastTrick)
             }
         }
         if (state.phase == TrickPhase.BIDDING || state.phase == TrickPhase.PLAYING) {
-            Text("La rând: ${seatName(state.turn)}", color = SepticaColors.Cream)
+            Text("La rând: ${seatName(state.turn)}", color = tokens.onSurface)
         }
-        Text("Mâna ta", color = SepticaColors.Cream)
+        Text("Mâna ta", color = tokens.onSurface)
         StandardHand(state.hands[0], selectedId, legal.map { it.id }.toSet()) { selectedId = it }
         when (state.phase) {
             TrickPhase.BIDDING -> if (state.turn == 0) {
-                Text("Câte levate vei lua? Suma actuală: ${state.bids.filterNotNull().sum()}", color = SepticaColors.Cream)
+                Text("Câte levate vei lua? Suma actuală: ${state.bids.filterNotNull().sum()}", color = tokens.onSurface)
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(legalBids(state)) { value ->
                         Button(onClick = { state = bid(state, value) }, enabled = enabled) { Text("$value") }
@@ -144,7 +145,7 @@ internal fun TrickGameUi(mode: TrickMode, onMenu: () -> Unit, paused: Boolean) {
             TrickPhase.FINISHED -> Text(
                 "Meci încheiat · ${if (state.winners.size == 1) "Câștigător" else "Victorie împărțită"}: " +
                     state.winners.joinToString { seatName(it) },
-                color = SepticaColors.Cream,
+                color = tokens.onSurface,
             )
         }
     }
@@ -152,10 +153,11 @@ internal fun TrickGameUi(mode: TrickMode, onMenu: () -> Unit, paused: Boolean) {
 
 @Composable
 private fun TrickCards(cards: List<PlayedCard>) {
+    val tokens = LocalGameThemeTokens.current
     LazyRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         items(cards, key = { it.seat }) { played ->
             androidx.compose.foundation.layout.Column {
-                Text(seatName(played.seat), color = SepticaColors.Cream)
+                Text(seatName(played.seat), color = tokens.onSurface)
                 StandardCardView(played.card)
             }
         }

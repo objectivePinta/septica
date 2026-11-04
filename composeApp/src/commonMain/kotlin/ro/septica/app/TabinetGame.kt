@@ -52,6 +52,7 @@ import ro.septica.tabinet.TabinetState
 
 @Composable
 internal fun TabinetGame(onMenu: () -> Unit, paused: Boolean) {
+    val tokens = LocalGameThemeTokens.current
     val engine = remember { TabinetEngine() }
     var state by remember { mutableStateOf(engine.newGame()) }
     var gameNumber by remember { mutableIntStateOf(0) }
@@ -93,7 +94,7 @@ internal fun TabinetGame(onMenu: () -> Unit, paused: Boolean) {
 
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize().background(
-            Brush.verticalGradient(listOf(SepticaColors.TableGreen, SepticaColors.DeepGreen)),
+            Brush.verticalGradient(listOf(tokens.table, tokens.background)),
         ).windowInsetsPadding(WindowInsets.safeDrawing),
         contentAlignment = Alignment.TopCenter,
     ) {
@@ -136,13 +137,13 @@ internal fun TabinetGame(onMenu: () -> Unit, paused: Boolean) {
                 Text(
                     if (humanTurn) "Rândul tău" else "Adversarul joacă…",
                     style = MaterialTheme.typography.titleMedium,
-                    color = SepticaColors.PaleGold,
+                    color = tokens.secondary,
                 )
                 Text(
                     "Pe masă: ${state.table.size} cărți · selectate: ${selectedTable.size}",
-                    color = SepticaColors.Muted,
+                    color = tokens.onSurfaceVariant,
                 )
-                Surface(shape = RoundedCornerShape(18.dp), color = SepticaColors.Panel) {
+                Surface(shape = RoundedCornerShape(18.dp), color = tokens.surface) {
                     if (state.table.isEmpty()) {
                         Column(
                             modifier = Modifier.fillMaxWidth().height(tableHeight).padding(18.dp),
@@ -150,7 +151,7 @@ internal fun TabinetGame(onMenu: () -> Unit, paused: Boolean) {
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text("Masa este goală", style = MaterialTheme.typography.headlineSmall)
-                            Text("Următoarea carte rămâne pe masă.", color = SepticaColors.Muted)
+                            Text("Următoarea carte rămâne pe masă.", color = tokens.onSurfaceVariant)
                         }
                     } else {
                         LazyVerticalGrid(
@@ -189,12 +190,12 @@ internal fun TabinetGame(onMenu: () -> Unit, paused: Boolean) {
                     },
                     color = if (humanTurn && selectedTableIds.isNotEmpty() && !validCapture) {
                         MaterialTheme.colorScheme.error
-                    } else SepticaColors.PaleGold,
+                    } else tokens.secondary,
                 )
-                hintMessage?.let { Text(it, color = SepticaColors.PaleGold) }
+                hintMessage?.let { Text(it, color = tokens.secondary) }
                 Text(
                     "Mâna ta: ${state.humanHand.size} cărți · glisează pentru toate",
-                    color = SepticaColors.Muted,
+                    color = tokens.onSurfaceVariant,
                 )
                 LazyRow(
                     modifier = Modifier.fillMaxWidth().height(152.dp),
@@ -279,6 +280,7 @@ private fun TabinetCardView(
     compact: Boolean = false,
     onClick: (() -> Unit)? = null,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         CardFace(
             rankSymbol = card.rank.symbol,
@@ -293,7 +295,7 @@ private fun TabinetCardView(
         Text(
             card.rank.values.joinToString("/"),
             style = MaterialTheme.typography.labelSmall,
-            color = SepticaColors.Muted,
+            color = tokens.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp),
         )
     }
@@ -301,18 +303,19 @@ private fun TabinetCardView(
 
 @Composable
 private fun TabinetScoreboard(state: TabinetState) {
-    Surface(shape = RoundedCornerShape(18.dp), color = SepticaColors.Panel) {
+    val tokens = LocalGameThemeTokens.current
+    Surface(shape = RoundedCornerShape(18.dp), color = tokens.surface) {
         Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Column(Modifier.weight(1f)) {
-                    Text("TU · ${state.humanScore} puncte", color = SepticaColors.PaleGold)
+                    Text("TU · ${state.humanScore} puncte", color = tokens.secondary)
                     Text(
                         "${state.humanCaptured.size} cărți · ${state.humanSweeps} table",
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
                 Column(Modifier.weight(1f)) {
-                    Text("ADVERSAR · ${state.computerScore} puncte", color = SepticaColors.PaleGold)
+                    Text("ADVERSAR · ${state.computerScore} puncte", color = tokens.secondary)
                     Text(
                         "${state.computerCaptured.size} cărți · ${state.computerSweeps} table",
                         style = MaterialTheme.typography.bodySmall,
@@ -321,7 +324,7 @@ private fun TabinetScoreboard(state: TabinetState) {
             }
             Text(
                 "Pachet: ${state.deck.size} · În mâna adversarului: ${state.computerHand.size}",
-                color = SepticaColors.Muted,
+                color = tokens.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
             )
         }

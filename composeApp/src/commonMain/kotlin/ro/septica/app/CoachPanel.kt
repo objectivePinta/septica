@@ -21,20 +21,21 @@ internal fun CoachPanel(
     analyze: () -> Advice,
     onSelectCard: ((String) -> Unit)? = null,
 ) {
+    val tokens = LocalGameThemeTokens.current
     // A changed position or a modal/lifecycle pause invalidates old advice immediately.
     var advice by remember(stateKey, enabled) { mutableStateOf<Advice?>(null) }
     TextButton(
         onClick = { advice = analyze() },
         enabled = enabled,
-        colors = ButtonDefaults.textButtonColors(contentColor = SepticaColors.PaleGold),
+        colors = ButtonDefaults.textButtonColors(contentColor = tokens.secondary),
     ) {
         Text(if (enabled) "Sfat tactic · local" else "Sfat tactic · indisponibil", style = MaterialTheme.typography.labelLarge)
     }
     advice?.let { current ->
         AlertDialog(
             onDismissRequest = { advice = null },
-            containerColor = SepticaColors.Panel,
-            titleContentColor = SepticaColors.PaleGold,
+            containerColor = tokens.surface,
+            titleContentColor = tokens.secondary,
             title = { Text(current.title) },
             text = {
                 Column(
@@ -43,7 +44,7 @@ internal fun CoachPanel(
                 ) {
                     Text(current.message)
                     Text("Algoritmi deterministici și, la Șeptică, simulări locale. Fără LLM, chatbot sau acces la cărți ascunse. Recomandările nu garantează câștigul.",
-                        style = MaterialTheme.typography.bodySmall, color = SepticaColors.Muted)
+                        style = MaterialTheme.typography.bodySmall, color = tokens.onSurfaceVariant)
                 }
             },
             confirmButton = { TextButton(onClick = { advice = null }) { Text("Am înțeles") } },

@@ -47,6 +47,7 @@ import ro.septica.macao.MacaoRank
 
 @Composable
 internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
+    val tokens = LocalGameThemeTokens.current
     val engine = remember { MacaoEngine() }
     var state by remember { mutableStateOf(engine.newGame()) }
     var gameNumber by remember { mutableIntStateOf(0) }
@@ -112,7 +113,7 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
             CoachPanel(state, humanTurn && !paused && !showRules && !confirmRestart && !chooseSuit,
                 analyze = { ro.septica.coach.macaoAdvice(state.humanHand, state.discardPile.last(), state.activeSuit, state.pendingDraw) },
                 onSelectCard = { selectedId = it })
-            Surface(shape = RoundedCornerShape(18.dp), color = SepticaColors.Panel) {
+            Surface(shape = RoundedCornerShape(18.dp), color = tokens.surface) {
                 Column(Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(
                         "Adversar: ${state.computerHand.size} cărți",
@@ -120,10 +121,10 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
                     )
                     Text(
                         "Pachet: ${state.deck.size} · Pe masă: ${state.discardPile.size}",
-                        color = SepticaColors.Muted,
+                        color = tokens.onSurfaceVariant,
                     )
                     if (state.computerHand.size == 1 && state.winner == null) {
-                        Text("Adversarul: Macao!", color = SepticaColors.PaleGold)
+                        Text("Adversarul: Macao!", color = tokens.secondary)
                     }
                 }
             }
@@ -140,13 +141,13 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
             }
             Text(
                 text = "Culoarea cerută: ${state.activeSuit.symbol} ${state.activeSuit.romanianName}",
-                color = SepticaColors.PaleGold,
+                color = tokens.secondary,
                 style = MaterialTheme.typography.titleMedium,
             )
             if (state.pendingDraw > 0 && state.winner == null) {
                 Text(
                     "Penalizare: +${state.pendingDraw} cărți. Răspunde cu 2, 3 sau joker, ori trage.",
-                    color = SepticaColors.PaleGold,
+                    color = tokens.secondary,
                 )
             }
             Text(
@@ -165,7 +166,7 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
             Text(
                 text = "Mâna ta: ${state.humanHand.size} cărți" +
                     if (state.humanHand.size == 1 && state.winner == null) " · Macao!" else "",
-                color = SepticaColors.Muted,
+                color = tokens.onSurfaceVariant,
             )
             LazyRow(
                 modifier = Modifier.fillMaxWidth().height(142.dp),
@@ -184,7 +185,7 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
                     )
                 }
             }
-            Text("Glisează pentru a vedea toate cărțile.", color = SepticaColors.Muted)
+            Text("Glisează pentru a vedea toate cărțile.", color = tokens.onSurfaceVariant)
             if (state.winner != null) {
                 Button(onClick = ::restart, modifier = Modifier.fillMaxWidth()) { Text("JOACĂ DIN NOU") }
             } else {
@@ -206,7 +207,7 @@ internal fun MacaoGame(onMenu: () -> Unit, paused: Boolean) {
                 ) {
                     Text(if (state.pendingDraw > 0) "TRAGE ${state.pendingDraw} CĂRȚI" else "TRAGE O CARTE")
                 }
-                Text("Tragerea încheie tura.", color = SepticaColors.Muted)
+                Text("Tragerea încheie tura.", color = tokens.onSurfaceVariant)
             }
         }
     }

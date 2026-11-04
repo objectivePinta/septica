@@ -150,6 +150,7 @@ private fun GameHeader(
     onShowRules: () -> Unit,
     onMenu: () -> Unit,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -158,12 +159,12 @@ private fun GameHeader(
             Text(
                 text = "ȘEPTICĂ",
                 style = MaterialTheme.typography.displaySmall,
-                color = SepticaColors.Cream,
+                color = tokens.onSurface,
             )
             Text(
                 text = "‹ Înapoi la jocuri",
                 style = MaterialTheme.typography.bodyMedium,
-                color = SepticaColors.Muted,
+                color = tokens.onSurfaceVariant,
                 modifier = Modifier.clickable(role = Role.Button, onClick = onMenu)
                     .padding(vertical = 8.dp),
             )
@@ -189,12 +190,13 @@ private fun HeaderButton(
     description: String,
     onClick: () -> Unit,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Box(
         modifier = Modifier
             .size(44.dp)
             .clip(CircleShape)
-            .background(SepticaColors.Panel.copy(alpha = 0.92f))
-            .border(1.dp, SepticaColors.Gold.copy(alpha = 0.5f), CircleShape)
+            .background(tokens.surface.copy(alpha = 0.92f))
+            .border(1.dp, tokens.primary.copy(alpha = 0.5f), CircleShape)
             .semantics {
                 contentDescription = description
                 role = Role.Button
@@ -204,7 +206,7 @@ private fun HeaderButton(
     ) {
         Text(
             text = text,
-            color = SepticaColors.PaleGold,
+            color = tokens.secondary,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
         )
@@ -213,12 +215,13 @@ private fun HeaderButton(
 
 @Composable
 private fun ScorePanel(state: GameState) {
+    val tokens = LocalGameThemeTokens.current
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .height(68.dp),
         shape = RoundedCornerShape(20.dp),
-        color = SepticaColors.Panel.copy(alpha = 0.94f),
+        color = tokens.surface.copy(alpha = 0.94f),
         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f)),
         shadowElevation = 8.dp,
     ) {
@@ -248,10 +251,11 @@ private fun ScoreValue(
     alignment: TextAlign,
     modifier: Modifier,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Column(modifier = modifier) {
         Text(
             text = label,
-            color = SepticaColors.Muted,
+            color = tokens.onSurfaceVariant,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.4.sp,
@@ -260,7 +264,7 @@ private fun ScoreValue(
         )
         Text(
             text = score.toString(),
-            color = SepticaColors.Cream,
+            color = tokens.onSurface,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Black,
             fontSize = 28.sp,
@@ -272,6 +276,7 @@ private fun ScoreValue(
 
 @Composable
 private fun DeckCounter(cardsLeft: Int) {
+    val tokens = LocalGameThemeTokens.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(82.dp),
@@ -282,20 +287,20 @@ private fun DeckCounter(cardsLeft: Int) {
                 .height(39.dp)
                 .shadow(4.dp, RoundedCornerShape(6.dp))
                 .clip(RoundedCornerShape(6.dp))
-                .background(SepticaColors.Burgundy)
-                .border(1.dp, SepticaColors.Gold, RoundedCornerShape(6.dp)),
+                .background(tokens.errorContainer)
+                .border(1.dp, tokens.primary, RoundedCornerShape(6.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = cardsLeft.toString(),
-                color = SepticaColors.Cream,
+                color = tokens.onErrorContainer,
                 fontWeight = FontWeight.Black,
                 fontSize = 14.sp,
             )
         }
         Text(
             text = "ÎN PACHET",
-            color = SepticaColors.Muted,
+            color = tokens.onSurfaceVariant,
             fontSize = 8.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 0.8.sp,
@@ -305,20 +310,21 @@ private fun DeckCounter(cardsLeft: Int) {
 
 @Composable
 private fun OpponentHand(cardCount: Int, label: String, active: Boolean, modifier: Modifier) {
+    val tokens = LocalGameThemeTokens.current
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = label.uppercase() + if (active) " · JOACĂ" else "",
-            color = if (active) SepticaColors.PaleGold else SepticaColors.Muted,
+            color = if (active) tokens.secondary else tokens.onSurfaceVariant,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
         )
         Text(
             text = "$cardCount ${if (cardCount == 1) "carte" else "cărți"}",
-            color = SepticaColors.Muted,
+            color = tokens.onSurfaceVariant,
             fontSize = 11.sp,
         )
         Spacer(Modifier.height(5.dp))
@@ -344,6 +350,7 @@ private fun GameTable(
     statusText: String,
     modifier: Modifier = Modifier,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = Color.Black.copy(alpha = 0.13f),
@@ -370,7 +377,7 @@ private fun GameTable(
                 Spacer(Modifier.height(8.dp))
                 Text(
                     text = "CARTE DE PORNIRE: ${state.targetRank?.symbol}",
-                    color = SepticaColors.PaleGold,
+                    color = tokens.secondary,
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.2.sp,
@@ -385,17 +392,18 @@ private fun StatusPill(
     text: String,
     highlighted: Boolean,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Surface(
         shape = CircleShape,
         color = if (highlighted) {
-            SepticaColors.Gold.copy(alpha = 0.18f)
+            tokens.primary.copy(alpha = 0.18f)
         } else {
-            SepticaColors.Panel.copy(alpha = 0.86f)
+            tokens.surface.copy(alpha = 0.86f)
         },
         border = BorderStroke(
             1.dp,
             if (highlighted) {
-                SepticaColors.Gold.copy(alpha = 0.55f)
+                tokens.primary.copy(alpha = 0.55f)
             } else {
                 Color.White.copy(alpha = 0.08f)
             },
@@ -404,7 +412,7 @@ private fun StatusPill(
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
-            color = if (highlighted) SepticaColors.PaleGold else SepticaColors.SoftWhite,
+            color = if (highlighted) tokens.secondary else tokens.onSurface,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
@@ -416,6 +424,7 @@ private fun StatusPill(
 
 @Composable
 private fun EmptyTable() {
+    val tokens = LocalGameThemeTokens.current
     Box(
         modifier = Modifier
             .width(72.dp)
@@ -423,14 +432,14 @@ private fun EmptyTable() {
             .clip(RoundedCornerShape(12.dp))
             .border(
                 1.dp,
-                SepticaColors.Gold.copy(alpha = 0.24f),
+                tokens.primary.copy(alpha = 0.24f),
                 RoundedCornerShape(12.dp),
             ),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "7",
-            color = SepticaColors.Gold.copy(alpha = 0.22f),
+            color = tokens.primary.copy(alpha = 0.22f),
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Black,
             fontSize = 32.sp,
@@ -440,6 +449,7 @@ private fun EmptyTable() {
 
 @Composable
 private fun TableCards(cards: List<PlayedCard>) {
+    val tokens = LocalGameThemeTokens.current
     val cardWidth = when (cards.size) {
         in 1..4 -> 64.dp
         5 -> 54.dp
@@ -453,7 +463,7 @@ private fun TableCards(cards: List<PlayedCard>) {
     ) {
         cards.forEachIndexed { index, played ->
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(played.player.label, color = SepticaColors.Muted, fontSize = 9.sp)
+                Text(played.player.label, color = tokens.onSurfaceVariant, fontSize = 9.sp)
                 PlayingCard(
                     card = played.card,
                     selected = false,
@@ -482,6 +492,7 @@ private fun HumanHand(
     eightsCut: Boolean,
     onCardSelected: (String) -> Unit,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -489,7 +500,7 @@ private fun HumanHand(
         ) {
             Text(
                 text = "MÂNA TA",
-                color = SepticaColors.Muted,
+                color = tokens.onSurfaceVariant,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.2.sp,
@@ -498,7 +509,7 @@ private fun HumanHand(
             if (humanTurn && continuationOnly) {
                 Text(
                     text = if (eightsCut) "cartea de pornire, 7 sau 8" else "doar cartea de pornire sau 7",
-                    color = SepticaColors.PaleGold,
+                    color = tokens.secondary,
                     fontSize = 10.sp,
                 )
             }
@@ -574,6 +585,7 @@ private fun ActionArea(
     onPass: () -> Unit,
     onNewGame: () -> Unit,
 ) {
+    val tokens = LocalGameThemeTokens.current
     when {
         state.phase == GamePhase.FINISHED -> {
             Button(
@@ -599,11 +611,11 @@ private fun ActionArea(
                         .weight(1f)
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.7f)),
+                    border = BorderStroke(1.dp, tokens.primary.copy(alpha = 0.7f)),
                 ) {
                     Text(
                         text = if (hasLegalContinuation) "MĂ OPRESC" else "NU POT TĂIA",
-                        color = SepticaColors.PaleGold,
+                        color = tokens.secondary,
                         fontSize = 12.sp,
                     )
                 }
@@ -659,14 +671,15 @@ private fun ActionArea(
 
 @Composable
 private fun goldButtonColors() = ButtonDefaults.buttonColors(
-    containerColor = SepticaColors.Gold,
-    contentColor = SepticaColors.Ink,
+    containerColor = LocalGameThemeTokens.current.primary,
+    contentColor = LocalGameThemeTokens.current.onPrimary,
     disabledContainerColor = Color.White.copy(alpha = 0.10f),
-    disabledContentColor = SepticaColors.Muted.copy(alpha = 0.65f),
+    disabledContentColor = LocalGameThemeTokens.current.onSurfaceVariant.copy(alpha = 0.65f),
 )
 
 @Composable
 internal fun RulesDialog(onDismiss: () -> Unit) {
+    val tokens = LocalGameThemeTokens.current
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -678,8 +691,8 @@ internal fun RulesDialog(onDismiss: () -> Unit) {
                 .widthIn(max = 520.dp)
                 .heightIn(max = 720.dp),
             shape = RoundedCornerShape(28.dp),
-            color = SepticaColors.Panel,
-            border = BorderStroke(1.dp, SepticaColors.Gold.copy(alpha = 0.35f)),
+            color = tokens.surface,
+            border = BorderStroke(1.dp, tokens.primary.copy(alpha = 0.35f)),
             shadowElevation = 20.dp,
         ) {
             Column(
@@ -696,17 +709,17 @@ internal fun RulesDialog(onDismiss: () -> Unit) {
                         Text(
                             text = "Cum se joacă",
                             style = MaterialTheme.typography.headlineSmall,
-                            color = SepticaColors.Cream,
+                            color = tokens.onSurface,
                         )
                         Text(
                             text = "2–4 jucători · fiecare pentru el",
-                            color = SepticaColors.Muted,
+                            color = tokens.onSurfaceVariant,
                             fontSize = 12.sp,
                         )
                     }
                     Spacer(Modifier.weight(1f))
                     TextButton(onClick = onDismiss) {
-                        Text("ÎNCHIDE", color = SepticaColors.PaleGold)
+                        Text("ÎNCHIDE", color = tokens.secondary)
                     }
                 }
                 Spacer(Modifier.height(18.dp))
@@ -752,6 +765,7 @@ private fun RuleItem(
     title: String,
     body: String,
 ) {
+    val tokens = LocalGameThemeTokens.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -760,12 +774,12 @@ private fun RuleItem(
         Surface(
             modifier = Modifier.size(32.dp),
             shape = CircleShape,
-            color = SepticaColors.Gold,
+            color = tokens.primary,
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
                     text = number,
-                    color = SepticaColors.Ink,
+                    color = tokens.onPrimary,
                     fontWeight = FontWeight.Black,
                 )
             }
@@ -774,13 +788,13 @@ private fun RuleItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = SepticaColors.Cream,
+                color = tokens.onSurface,
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(Modifier.height(3.dp))
             Text(
                 text = body,
-                color = SepticaColors.Muted,
+                color = tokens.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

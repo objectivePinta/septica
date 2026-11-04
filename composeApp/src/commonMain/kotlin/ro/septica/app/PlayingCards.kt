@@ -57,7 +57,7 @@ internal fun CardFace(
     val textMeasurer = rememberTextMeasurer()
     val shape = RoundedCornerShape(percent = 9)
     val ink = if (isRed) Color(0xFF8E2339) else Color(0xFF182C35)
-    val gold = SepticaColors.Gold
+    val gold = LocalGameThemeTokens.current.primary
     Box(
         modifier = modifier
             .graphicsLayer {
@@ -142,8 +142,9 @@ internal fun CardFace(
 
 @Composable
 internal fun CardBack(modifier: Modifier = Modifier) {
+    val tokens = LocalGameThemeTokens.current
     val shape = RoundedCornerShape(percent = 9)
-    val gold = SepticaColors.PaleGold
+    val gold = tokens.secondary
     Box(
         modifier = modifier
             .shadow(3.dp, shape)
@@ -151,7 +152,7 @@ internal fun CardBack(modifier: Modifier = Modifier) {
             .semantics { contentDescription = "Carte cu fața în jos" }
             .drawWithCache {
                 val enamel = Brush.linearGradient(
-                    listOf(Color(0xFF143F4A), Color(0xFF0B2233), Color(0xFF19535A)),
+                    listOf(tokens.table, tokens.background, tokens.felt),
                     end = Offset(size.width, size.height),
                 )
                 onDrawBehind {
@@ -179,7 +180,7 @@ internal fun CardBack(modifier: Modifier = Modifier) {
                     }
                     drawCardFrame(gold, false)
                     drawOval(
-                        Color(0xFF102F3E),
+                        tokens.surfaceVariant,
                         Offset(w * .18f, h * .265f),
                         Size(w * .64f, h * .47f),
                     )
