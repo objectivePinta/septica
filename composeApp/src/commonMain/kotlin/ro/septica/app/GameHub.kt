@@ -36,46 +36,139 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun SepticaApp() {
     val themeLoad = remember { loadGameTheme(createThemePreferenceStore()) }
-    SepticaTheme(themeLoad.theme) {
+    var selectedTheme by remember { mutableStateOf(themeLoad.theme) }
+    var persistenceError by remember { mutableStateOf(themeLoad.errorMessage) }
+    SepticaTheme(selectedTheme) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onBackground,
         ) {
-            GameNavigation()
+            GameNavigation(
+                selectedTheme = selectedTheme,
+                persistenceError = persistenceError,
+                onSelectTheme = { theme ->
+                    selectedTheme = theme
+                    persistenceError = saveGameTheme(createThemePreferenceStore(), theme)
+                },
+            )
         }
     }
 }
 
 @Composable
-private fun GameNavigation() {
-    var destination by remember { mutableStateOf<GameDestination?>(null) }
-    var confirmExit by remember { mutableStateOf(false) }
-    val septicaSession = remember { SepticaGameSession() }
+private fun GameNavigation(
+    selectedTheme: GameTheme,
+    persistenceError: String?,
+    onSelectTheme: (GameTheme) -> Unit,
+) {
+    var route by remember { mutableStateOf(AppRoute.HOME) }
+    var homeState by remember { mutableStateOf(HomeState()) }
+    var activeGame by remember { mutableStateOf<GameDestination?>(null) }
+    var session by remember { mutableStateOf<SepticaGameSession?>(null) }
+    var pendingGame by remember { mutableStateOf<GameDestination?>(null) }
+    var confirmReplacement by remember { mutableStateOf(false) }
+    var confirmReturnHome by remember { mutableStateOf(false) }
 
-    when (destination) {
-        null -> GamePicker(onSelect = { destination = it })
-        GameDestination.SEPTICA ->
-            SepticaGame(session = septicaSession, onMenu = { confirmExit = true }, paused = confirmExit)
+    fun startGame(game: GameDestination) {
+        homeState = homeState.recordLaunch(game)
+        activeGame = game
+        session = SepticaGameSession()
+        route = AppRoute.GAME
+        pendingGame = null
     }
 
-    if (confirmExit) {
+    when (route) {
+        AppRoute.HOME -> HomeScreen(
+            state = homeState,
+            activeGame = activeGame,
+            onPlayNow = { route = AppRoute.CATALOG },
+            onContinue = { if (session != null) route = AppRoute.GAME },
+            onOpenGame = { game ->
+                when {
+                    activeGame == game && session != null -> route = AppRoute.GAME
+                    activeGame != null -> {
+                        pendingGame = game
+                        confirmReplacement = true
+                    }
+                    else -> startGame(game)
+                }
+            },
+            onToggleFavorite = { homeState = homeState.toggleFavorite(it) },
+            onOpenSettings = { route = AppRoute.SETTINGS },
+        )
+        AppRoute.CATALOG -> GamePicker(
+            onSelect = { game ->
+                when {
+                    activeGame == game && session != null -> route = AppRoute.GAME
+                    activeGame != null -> {
+                        pendingGame = game
+                        confirmReplacement = true
+                    }
+                    else -> startGame(game)
+                }
+            },
+        )
+        AppRoute.GAME -> {
+            val activeSession = session
+            if (activeSession != null) {
+                SepticaGame(
+                    session = activeSession,
+                    onMenu = { confirmReturnHome = true },
+                    paused = confirmReturnHome,
+                )
+            }
+        }
+        AppRoute.SETTINGS -> ThemeSettingsScreen(
+            selectedTheme = selectedTheme,
+            persistenceError = persistenceError,
+            onSelectTheme = onSelectTheme,
+            onBack = { route = AppRoute.HOME },
+        )
+    }
+
+    if (confirmReturnHome) {
         AlertDialog(
-            onDismissRequest = { confirmExit = false },
-            title = { Text("Înapoi la jocuri?") },
-            text = { Text("Partida curentă nu va fi păstrată.") },
+            onDismissRequest = { confirmReturnHome = false },
+            title = { Text("Înapoi la pagina principală?") },
+            text = { Text("Partida rămâne disponibilă pentru continuare cât timp aplicația este deschisă.") },
             confirmButton = {
                 TextButton(onClick = {
-                    confirmExit = false
-                    destination = null
-                }) { Text("ÎNAPOI LA JOCURI") }
+                    confirmReturnHome = false
+                    route = AppRoute.HOME
+                }) { Text("ÎNAPOI ACASĂ") }
             },
             dismissButton = {
-                TextButton(onClick = { confirmExit = false }) { Text("CONTINUĂ PARTIDA") }
+                TextButton(onClick = { confirmReturnHome = false }) { Text("CONTINUĂ PARTIDA") }
+            },
+        )
+    }
+
+    if (confirmReplacement) {
+        AlertDialog(
+            onDismissRequest = {
+                confirmReplacement = false
+                pendingGame = null
+            },
+            title = { Text("Începi o partidă nouă?") },
+            text = { Text("Partida curentă va fi înlocuită.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmReplacement = false
+                    pendingGame?.let(::startGame)
+                }) { Text("PARTIDĂ NOUĂ") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    confirmReplacement = false
+                    pendingGame = null
+                }) { Text("ANULEAZĂ") }
             },
         )
     }
 }
+
+private enum class AppRoute { HOME, CATALOG, GAME, SETTINGS }
 
 @Composable
 private fun GamePicker(onSelect: (GameDestination) -> Unit) {

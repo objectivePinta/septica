@@ -4,14 +4,18 @@ Zece jocuri de cărți în limba română, realizate cu Kotlin Multiplatform și
 Multiplatform. Logica și interfața sunt în `commonMain`, iar aplicația iOS
 folosește o gazdă SwiftUI foarte subțire.
 
-La pornire alegi jocul dintr-un catalog cu căutare, inclusiv fără diacritice.
+La pornire ajungi pe pagina principală, de unde poți începe un joc, continua
+partida activă, redeschide jocurile recente sau marca un joc preferat. Catalogul
+disponibil acum include Șeptică și are căutare, inclusiv fără diacritice.
 Macao, Tabinet, Război, Popa prostu’, Blackjack și Șaizeci și șase
 au un adversar automat. La Șeptică alegi 2, 3 sau 4 jucători (tu și 1–3 roboți).
 Whist și Rentz au trei adversari automați, iar Solitaire
 se joacă individual. Toate funcționează offline, fără bani reali.
 
-Butonul de întoarcere la jocuri cere confirmare; partida nu se
-păstrează după ieșire. Codul folosește identificatori și comentarii în engleză.
+Partida poate fi continuată cât timp aplicația rămâne deschisă; repornirea
+aplicației o încheie. Pagina Setări permite alegerea uneia dintre cele cinci
+teme, iar alegerea este memorată între porniri. Codul folosește identificatori
+și comentarii în engleză.
 Jocurile noi folosesc un model comun pentru pachetul standard și componente
 vizuale comune. Variantele regionale pot avea alte reguli; fiecare joc afișează
 regulile variantei implementate.
