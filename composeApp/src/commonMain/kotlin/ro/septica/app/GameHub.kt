@@ -51,10 +51,12 @@ fun SepticaApp() {
 private fun GameNavigation() {
     var destination by remember { mutableStateOf<GameDestination?>(null) }
     var confirmExit by remember { mutableStateOf(false) }
+    val septicaSession = remember { SepticaGameSession() }
 
     when (destination) {
         null -> GamePicker(onSelect = { destination = it })
-        GameDestination.SEPTICA -> SepticaGame(onMenu = { confirmExit = true }, paused = confirmExit)
+        GameDestination.SEPTICA ->
+            SepticaGame(session = septicaSession, onMenu = { confirmExit = true }, paused = confirmExit)
     }
 
     if (confirmExit) {

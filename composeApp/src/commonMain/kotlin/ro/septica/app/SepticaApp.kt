@@ -23,14 +23,14 @@ import ro.septica.game.SepticaEngine
 import ro.septica.game.SepticaRules
 
 @Composable
-internal fun SepticaGame(onMenu: () -> Unit, paused: Boolean) {
-    val engine = remember { SepticaEngine() }
-    var gameNumber by remember { mutableIntStateOf(0) }
-    var state by remember { mutableStateOf(engine.newGame()) }
-    var selectedCardId by remember { mutableStateOf<String?>(null) }
-    var showRules by remember { mutableStateOf(false) }
-    var showSetup by remember { mutableStateOf(true) }
-    var playerCount by remember { mutableIntStateOf(2) }
+internal fun SepticaGame(session: SepticaGameSession, onMenu: () -> Unit, paused: Boolean) {
+    val engine = session.engine
+    var gameNumber by session::gameNumber
+    var state by session::state
+    var selectedCardId by session::selectedCardId
+    var showRules by session::showRules
+    var showSetup by session::showSetup
+    var playerCount by session::playerCount
 
     LaunchedEffect(
         gameNumber,
